@@ -15,7 +15,8 @@
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "tymon/jwt-auth": "dev-develop",
-        "zircote/swagger-php": "2.*"
+        "zircote/swagger-php": "2.*",
+        "unlu/laravel-api-query-builder": "~1.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
