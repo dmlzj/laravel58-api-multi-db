@@ -2,10 +2,10 @@
 /**
 *Login
 * @SWG\Post(
-*     path="/api/v1/int/login",
+*     path="/api/v1/users/login",
 *     description="login",
 *     produces={"application/json"},
-*     tags={"auth Section"},
+*     tags={"users"},
 *     @SWG\Parameter(
 *         name="data",
 *         in="body",
@@ -36,10 +36,10 @@
 /**
 *Login
 * @SWG\Get(
-*     path="/api/v1/int/user",
+*     path="/api/v1/users",
 *     description="get data user by token",
 *     produces={"application/json"},
-*     tags={"auth Section"},
+*     tags={"users"},
 *     @SWG\Parameter(
 *         name="Authorization",
 *         in="header",
@@ -65,10 +65,10 @@
 /**
 *Logout
 * @SWG\Post(
-*     path="/api/v1/int/logout",
+*     path="/api/v1/users/logout",
 *     description="logout",
 *     produces={"application/json"},
-*     tags={"auth Section"},
+*     tags={"users"},
 *     @SWG\Parameter(
 *         name="Authorization",
 *         in="header",
