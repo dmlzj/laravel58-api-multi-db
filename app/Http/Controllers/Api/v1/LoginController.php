@@ -31,8 +31,6 @@ class LoginController extends Controller
             $response = compact('status','error');
             return response()->json($response, 400);
         }
-
-
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
                 $code = 404;

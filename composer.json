@@ -14,9 +14,10 @@
         "jenssegers/mongodb": "^3.5",
         "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
+        "medz/laravel-jpush-notification-channel": "^1.0",
         "tymon/jwt-auth": "dev-develop",
-        "zircote/swagger-php": "2.*",
-        "unlu/laravel-api-query-builder": "~1.0"
+        "unlu/laravel-api-query-builder": "~1.0",
+        "zircote/swagger-php": "2.*"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",
