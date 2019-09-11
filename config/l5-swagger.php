@@ -191,7 +191,7 @@ return [
     /*
     |--------------------------------------------------------------------------
     | Configs plugin allows to fetch external configs instead of passing them to SwaggerUIBundle.
-    | See more at: https://github.com/swagger-api/swagger-ui#configs-plugin
+    | See more at: https://github.com/swagger-apiswagger-ui#configs-plugin
     |--------------------------------------------------------------------------
     */
 
