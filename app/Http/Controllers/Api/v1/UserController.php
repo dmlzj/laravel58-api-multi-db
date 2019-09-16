@@ -93,13 +93,25 @@ class UserController extends Controller
         // $data =json_decode($request->getContent(), true);
         $credentials = $request->only('email', 'password');
 
+        // $validator = Validator::make($request->all(), [
+        //     'email' => 'required|email',
+        //     'password' => 'required',
+        // ], [
+        //     'email.required' => '邮箱不能为空',
+        //     'password.required' => '密码不能为空'
+        // ]);
         $validator = Validator::make($request->all(), [
-            'email' => 'required|email',
+            'email' => 'sometimes|required|email',
+            'mobile' => 'sometimes|required|phone',
             'password' => 'required',
         ], [
-            'email.required' => '邮箱不能为空',
-            'password.required' => '密码不能为空'
+            'email.required' => '2001',
+            'email.email' => '2002',
+            'mobile.required' => '2003',
+            'mobile.phone' => '2004',
+            'password.required' => '2005',
         ]);
+
 
         if($validator->fails()){
             $status['success']= false;
@@ -109,6 +121,14 @@ class UserController extends Controller
             $error = $this->validation_message($validasi);
             $response = compact('status','error');
             return response()->json($response, 400);
+        }
+        if ($request->input('email')) {
+            $credentials = $request->only('email', 'password');
+        } else if ($request->input('mobile')) {
+            $credentials = $request->only('mobile', 'password');
+        } else {
+            $error = $this->getError('2000');
+            return response()->json($error, 200);
         }
         return $this->login($credentials);
 
