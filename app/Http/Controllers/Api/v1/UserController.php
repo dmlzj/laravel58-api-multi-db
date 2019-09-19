@@ -127,7 +127,7 @@ class UserController extends Controller
         } else if ($request->input('mobile')) {
             $credentials = $request->only('mobile', 'password');
         } else {
-            $error = $this->getError('2000');
+            $error = getError('2000');
             return response()->json($error, 200);
         }
         return $this->login($credentials);
@@ -208,7 +208,7 @@ class UserController extends Controller
         if($validator->fails()){
             $validasi = $validator->messages()->toArray();
             // dd($validasi);
-            $response = $this->getError('', $validasi);;
+            $response = getError('', $validasi);;
             return response()->json($response, 200);
         }
         $data = [
@@ -224,7 +224,7 @@ class UserController extends Controller
             if ($res->count() === 0) {
                 return $this->saveUser($data, $request->password);
             } else {
-                $error = $this->getError('2008');;
+                $error =getError('2008');;
                 return response()->json($error, 200);
             }
         } else if (!is_null($request->input('email'))) {
@@ -234,11 +234,11 @@ class UserController extends Controller
             if ($res->count() === 0) {
                 return $this->saveUser($data, $request->password);
             } else {
-                $error = $this->getError('2008');;
+                $error = getError('2008');;
                 return response()->json($error, 200);
             }
         } else {
-            $error = $this->getError('2010');;
+            $error = getError('2010');;
             return response()->json($error, 200);
         }
 
@@ -261,7 +261,7 @@ class UserController extends Controller
         $credentials['password'] = $pwd;
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
-                $response = $this->getError('2009');
+                $response = getError('2009');
                 return response()->json($response, 200);
             }
         } catch (JWTException $e) {

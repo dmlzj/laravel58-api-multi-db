@@ -102,14 +102,9 @@ class ThrottleRequests
      */
     protected function buildResponse($key, $maxAttempts)
     {
-        $message = json_encode([
-            'error' => [
-                'message' => 'Too many attempts, please slow down the request.' //may comes from lang file
-            ],
-            'status_code' => 4029 //your custom code
-        ]);
+        $message = json_encode(getError('1000'));
 
-        $response = new Response($message, 429);
+        $response = new Response($message, 200);
 
         $retryAfter = $this->limiter->availableIn($key);
 
