@@ -91,7 +91,7 @@ class UserController extends Controller
     public function authenticate(Request $request)
     {
         // $data =json_decode($request->getContent(), true);
-        $credentials = $request->only('email', 'password');
+        // $credentials = $request->only('email', 'password');
 
         // $validator = Validator::make($request->all(), [
         //     'email' => 'required|email',
@@ -130,7 +130,7 @@ class UserController extends Controller
             $error = getError('2000');
             return response()->json($error, 200);
         }
-        return $this->login($credentials);
+        return $this->login($credentials, $request->input('password'));
 
     }
 

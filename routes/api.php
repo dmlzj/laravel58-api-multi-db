@@ -13,9 +13,9 @@ use Illuminate\Http\Request;
   |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
 
 
 Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function () {
@@ -23,8 +23,10 @@ Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function () {
         Route::post('login', 'UserController@authenticate');
         Route::post('regist', 'UserController@store');
     });
-
-	// Route::group( [ 'prefix' => 'users'  , 'middleware'=>'api.auth' ], function () {
+    Route::group(['preffix' => 'test', 'middleware' => ['jwt.role:admin', 'admin.auth']], function () {
+        Route::get('test', 'TestController@test');
+    });
+	// Route::group( [ 'prefix' => 'users'  , 'middleware'=>['jwt.role:user','api.auth'] ], function () {
     Route::group( [ 'prefix' => 'users' ], function () {
         Route::get('/', 'UserController@index');
         Route::get('/{id}', 'UserController@show');

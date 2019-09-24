@@ -6,7 +6,7 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenExpiredException;
 use Tymon\JWTAuth\Http\Middleware\BaseMiddleware;
 
-class GetUserFromToken extends BaseMiddleware
+class AdminGetUserFromToken extends BaseMiddleware
 {
     /**
      * Handle an incoming request.
@@ -17,6 +17,7 @@ class GetUserFromToken extends BaseMiddleware
      */
     public function handle($request, \Closure $next)
     {
+        \Config::set( 'auth.defaults.guard','admin');
         $code = 401;
         $status = array('success'=>false,'code'=>$code,'message'=>'token not found');
         if (! $token = $this->auth->setRequest($request)->getToken()) {

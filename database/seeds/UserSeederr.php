@@ -14,19 +14,21 @@ class UserSeederr extends Seeder
     {
         if(DB::connection('pgsql')->table('user')->get()->count() == 0){
 
-            $insertArray =['phone' => '123', 'first_name' => 'andi','last_name' =>'rosadi','address'=>'kopo','born_place'=>'Bandung','born_date'=>'1992-07-17','npwp'=>'123'];
-            $insertid = DB::connection('mongodb')->collection('muser')->insertGetId($insertArray);
-         
-        
+            // $insertArray =['phone' => '123', 'first_name' => 'andi','last_name' =>'rosadi','address'=>'kopo','born_place'=>'Bandung','born_date'=>'1992-07-17','npwp'=>'123'];
+            // $insertid = DB::connection('mongodb')->collection('muser')->insertGetId($insertArray);
+
             DB::connection('pgsql')->table('user')->insert(
                 [
                     'id'=>1,
-                    'username'=>'sa',
-                    'email' =>'super@admin.com',
-                    'password' => Hash::make('admin1234!'),
-                    'role_id' => '1',
-                    '_iduser' => $insertid
-                ]   
+                    'username'=>'dmlzj',
+                    'email' =>'284832506@qq.com',
+                    'password' => Hash::make('dmlzj789'),
+                    'status' => 1,
+                    'mobile' => '13361567903',
+                    'nickname' => '蓝蓝天空',
+                    // 'role_id' => '1',
+                    // '_iduser' => $insertid
+                ]
             );
         }
     }

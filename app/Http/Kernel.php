@@ -58,10 +58,12 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
-        // 'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'throttle' => \App\Http\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+
+        'jwt.role' =>  \App\Http\Middleware\JWTRoleAuth::class,
         'api.auth'     => \App\Http\Middleware\GetUserFromToken::class,
+        'admin.auth'     => \App\Http\Middleware\AdminGetUserFromToken::class,
     ];
 
     /**
