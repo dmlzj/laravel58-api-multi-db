@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\v1;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Admin;
 use App\Mongo\Muser;
 use JWTAuth;
 use Illuminate\Support\Facades\Validator;
@@ -81,6 +82,16 @@ class UserController extends Controller
         // $user->find()
     }
 
+    // 前端用户登录
+    public function userLogin(Request $request) {
+        return $this->authenticate($request, 'user');
+    }
+
+    // 后端用户登录
+    public function adminLogin(Request $request) {
+        return $this->authenticate($request, 'admin');
+    }
+
     /** 用户登录
      *
      *
@@ -88,27 +99,19 @@ class UserController extends Controller
      *
      * @return item
      */
-    public function authenticate(Request $request)
+    public function authenticate(Request $request, $type)
     {
-        // $data =json_decode($request->getContent(), true);
-        // $credentials = $request->only('email', 'password');
-
-        // $validator = Validator::make($request->all(), [
-        //     'email' => 'required|email',
-        //     'password' => 'required',
-        // ], [
-        //     'email.required' => '邮箱不能为空',
-        //     'password.required' => '密码不能为空'
-        // ]);
         $validator = Validator::make($request->all(), [
             'email' => 'sometimes|required|email',
             'mobile' => 'sometimes|required|phone',
+            'username' => 'sometimes|required',
             'password' => 'required',
         ], [
             'email.required' => '2001',
             'email.email' => '2002',
             'mobile.required' => '2003',
             'mobile.phone' => '2004',
+            'username.required' => '2014',
             'password.required' => '2005',
         ]);
 
@@ -126,11 +129,13 @@ class UserController extends Controller
             $credentials = $request->only('email', 'password');
         } else if ($request->input('mobile')) {
             $credentials = $request->only('mobile', 'password');
+        } else if ($request->input('username')) {
+            $credentials = $request->only('username', 'password');
         } else {
             $error = getError('2000');
             return response()->json($error, 200);
         }
-        return $this->login($credentials, $request->input('password'));
+        return $this->login($credentials, $request->input('password'), $type);
 
     }
 
@@ -247,17 +252,18 @@ class UserController extends Controller
     private function saveUser(array $data, $pwd) {
 
         $res = User::create($data);
-        // dd($res);
-        // User::save();
-        // $last_login = Carbon::now();
-        // $user->last_login =  $last_login;
-        // $user->save();
         return $this->login($data, $pwd);
 
     }
     // 用户登录
-    private function login($credentials, $pwd) {
+    private function login($credentials, $pwd, $type) {
         // dd($credentials);
+        if ($type === 'user') {
+            \Config::set( 'auth.defaults.guard','api');
+
+        } else {
+            \Config::set( 'auth.defaults.guard','admin');
+        }
         $credentials['password'] = $pwd;
         try {
             if (! $token = JWTAuth::attempt($credentials)) {
@@ -272,27 +278,52 @@ class UserController extends Controller
         $data = null;
         if (isset($credentials['email'])) {
             $data = User::where('email', $credentials['email'])->first();
+        } else if (isset($credentials['username'])) {
+            if ($type === 'user') {
+                $data = User::where('username', $credentials['username'])->first();
+            } else {
+                $data = Admin::where('username', $credentials['username'])->first();
+            }
         } else {
             $data = User::where('mobile', $credentials['mobile'])->first();
         }
 
         $data->last_login = $last_login;
         $data->save();
-        // $user_detail = Muser::where('_id',$data->_iduser)->first();
-        $users = [
-            'id' => $data->id,
-            'email' => $data->email,
-            'mobile' => $data->mobile,
-            'username' => $data->username,
-            'nickname' => $data->nickname,
-            'token' => 'Bearer '.$token,
-            // 'user_details'=>$user_detail
-        ];
+
+        if ($type == 'admin') {
+            $users = [
+                'id' => $data->id,
+                'username' => $data->username,
+                'avatar' => $data->avatar,
+                'roles' => ['admin'],
+                'token' => 'Bearer '.$token,
+                // 'user_details'=>$user_detail
+            ];
+        } else {
+            $users = [
+                'id' => $data->id,
+                'email' => $data->email,
+                'mobile' => $data->mobile,
+                'username' => $data->username,
+                'nickname' => $data->nickname,
+                'token' => 'Bearer '.$token,
+                // 'user_details'=>$user_detail
+            ];
+        }
 
         return response()->json([
             'code'=>'0',
             'data'=> $users,
         ],200);
+    }
+    // 返回后台用户信息
+    public function adminInfo() {
+        return $this->getAuthenticatedUser('admin');
+    }
+    // 返回前台用户信息
+    public function userInfo() {
+        return $this->getAuthenticatedUser('user');
     }
     /** 获取登录的用户信息
      *
@@ -300,18 +331,44 @@ class UserController extends Controller
      *
      * @return item
      */
-    public function getAuthenticatedUser()
+    public function getAuthenticatedUser($type)
     {
-        $user = JWTAuth::parseToken()->authenticate();
-        $user_detail = Muser::where('_id',$user->_iduser)->first();
-        $users = [
-            'id' => $user->id,
-            'email' => $user->email,
-            'nickname' => $user->first_name,
-            'last_login'=> $user->last_login,
-        ];
-        $response = ['code'=>200,'message'=>'success','contents'=>$users];
+        $users = [];
+        if ($type === 'user') {
+            \Config::set( 'auth.defaults.guard','api');
+            $user = JWTAuth::parseToken()->authenticate();
+            $users = [
+                'id' => $user->id,
+                'email' => $user->email,
+                'mobile' => $user->mobile,
+                'username' => $user->username,
+                'nickname' => $user->nickname,
+                'last_login'=> $user->last_login,
+            ];
+        } else {
+            \Config::set( 'auth.defaults.guard','admin');
+            $user = JWTAuth::parseToken()->authenticate();
+            $users = [
+                'id' => $user->id,
+                'username' => $user->username,
+                'avatar' => $user->avatar,
+                'roles' => ['admin'],
+                'last_login'=> $user->last_login,
+            ];
+        }
+
+        $response = ['code'=> '0','data'=>$users];
         return response()->json($response,200);
+    }
+
+    // 普通用户退出登录
+    public function userLogout(Request $request) {
+        return $this->destroy($request, 'user');
+    }
+
+    // 后台用户退出登录
+    public function adminLogout(Request $request) {
+        return $this->destroy($request, 'admin');
     }
 
     /** 退出登录
@@ -321,10 +378,16 @@ class UserController extends Controller
      *
      * @return
      */
-    public function destroy( Request $request )
+    public function destroy( Request $request, $type )
     {
+        if ($type === 'user') {
+            \Config::set( 'auth.defaults.guard','api');
+        } else {
+            \Config::set( 'auth.defaults.guard','admin');
+        }
+        JWTAuth::getToken();
         $logout = JWTAuth::invalidate();
-        $response = ['code'=>200,'message'=>'success logout'];
+        $response = ['code'=> '0','data'=>'success logout'];
         return response()->json($response, 200);
     }
 

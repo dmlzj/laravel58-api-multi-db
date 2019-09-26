@@ -20,7 +20,11 @@ use Illuminate\Http\Request;
 
 Route::group(['prefix' => 'v1', 'namespace' => 'Api\v1'], function () {
 	Route::group( [ 'prefix' => 'users' ], function () {
-        Route::post('login', 'UserController@authenticate');
+        Route::post('login', 'UserController@userLogin');
+        Route::post('admin/login', 'UserController@adminLogin');
+        Route::post('logout', 'UserController@userLogout');
+        Route::post('admin/logout', 'UserController@adminLogout');
+        Route::get('admin/info', 'UserController@adminInfo');
         Route::post('regist', 'UserController@store');
     });
     Route::group(['preffix' => 'test', 'middleware' => ['jwt.role:admin', 'admin.auth']], function () {

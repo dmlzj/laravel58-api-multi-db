@@ -17,6 +17,8 @@ class CreateAdminTable extends Migration
             $table->bigIncrements('id');
             $table->string('username');
             $table->string('password');
+            $table->string('avatar');
+            $table->date('last_login')->nullable();
             // 0禁用，1启用
             $table->integer('status')->default(1);
             $table->rememberToken();

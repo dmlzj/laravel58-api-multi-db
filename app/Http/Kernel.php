@@ -19,6 +19,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \Barryvdh\Cors\HandleCors::class,
     ];
 
     /**
@@ -60,7 +61,7 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \App\Http\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-
+        'cross.request' => \App\Http\Middleware\EnableCrossRequest::class,
         'jwt.role' =>  \App\Http\Middleware\JWTRoleAuth::class,
         'api.auth'     => \App\Http\Middleware\GetUserFromToken::class,
         'admin.auth'     => \App\Http\Middleware\AdminGetUserFromToken::class,
