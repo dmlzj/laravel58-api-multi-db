@@ -11,8 +11,8 @@ class AdminTableSeeder extends Seeder
      */
     public function run()
     {
-        if(DB::connection('pgsql')->table('admin')->get()->count() == 0) {
-            DB::connection('pgsql')->table('admin')->insert(
+        if(DB::connection('pgsql')->table('admins')->get()->count() == 0) {
+            DB::connection('pgsql')->table('admins')->insert(
                 [
                     'id' => 1,
                     'username' => 'sy_admin',

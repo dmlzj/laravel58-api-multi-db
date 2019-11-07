@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::connection('pgsql')->create('user', function (Blueprint $table) {
+        Schema::connection('pgsql')->create('users', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('email');
             $table->string('username')->nullable();
@@ -49,7 +49,7 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::connection('pgsql')->dropIfExists('user');
+        Schema::connection('pgsql')->dropIfExists('users');
         // Schema::connection('pgsql')->dropIfExists('prole');
         // Schema::connection('mongodb')->dropIfExists('muser');
 

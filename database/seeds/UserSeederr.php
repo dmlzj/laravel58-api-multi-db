@@ -12,12 +12,12 @@ class UserSeederr extends Seeder
      */
     public function run()
     {
-        if(DB::connection('pgsql')->table('user')->get()->count() == 0){
+        if(DB::connection('pgsql')->table('users')->get()->count() == 0){
 
             // $insertArray =['phone' => '123', 'first_name' => 'andi','last_name' =>'rosadi','address'=>'kopo','born_place'=>'Bandung','born_date'=>'1992-07-17','npwp'=>'123'];
             // $insertid = DB::connection('mongodb')->collection('muser')->insertGetId($insertArray);
 
-            DB::connection('pgsql')->table('user')->insert(
+            DB::connection('pgsql')->table('users')->insert(
                 [
                     'id'=>1,
                     'username'=>'dmlzj',

@@ -13,7 +13,6 @@ class User extends Authenticatable implements JWTSubject
     use Notifiable,SoftDeletes;
 
     protected $connection= 'pgsql';
-    protected $table = 'user';
 
     /**
      * The attributes that are mass assignable.

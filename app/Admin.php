@@ -13,7 +13,6 @@ class Admin extends Authenticatable implements JWTSubject
     use Notifiable,SoftDeletes;
 
     protected $connection= 'pgsql';
-    protected $table = 'admin';
 
     /**
      * The attributes that are mass assignable.
